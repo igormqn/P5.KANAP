@@ -7,29 +7,30 @@ function addProducts (data) {
    // const imageUrl = data[0].imageUrl
    // const altTxt = data[0].altTxt
    // const name = data[0].name
-   // const description = data[0].
-
+   // const description = data[0].descritpion
+   
 
   data.forEach((canape) => {
     
-    const {_id, imageUrl, altTxt, name, description} = canape
+
+    const { _id, imageUrl, altTxt, name, description} = canape
     const anchor = makeAnchor(_id)
     const article = document.createElement("article")
     const image = makeImage(imageUrl, altTxt)
     const h3 = makeH3(name)
     const p = makeParagraph(description)
     
-    appendElementstoArticle(article, [image, h3, p])
+    appendElementsToArticle(article, [image, h3, p])
     appendArticleToAnchor(anchor, article)    
 })
 }
-function appendElementstoArticle(article, array) {
+function appendElementsToArticle(article, array) {
     array.forEach((item) => {
         article.appendChild(item)
     })
-    article.appendChild(image) 
-    article.appendChild(h3) 
-    article.appendChild(p)
+  // article.appendChild(image) 
+  // article.appendChild(h3) 
+  // article.appendChild(p)
 }
 
 function makeAnchor(id) {
@@ -40,9 +41,10 @@ function makeAnchor(id) {
 
 function appendArticleToAnchor(anchor, article)  {
     const items = document.querySelector("#items")
-    if (items!= null) {
+    if (items != null) {
         items.appendChild(anchor) 
-        anchor.appendChild(article)     
+        anchor.appendChild(article)  
+        console.log("éléments ajouté à items", items)     
     } 
 }
 function makeImage(imageUrl, altTxt) {
