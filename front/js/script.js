@@ -66,3 +66,4 @@ function makeParagraph(description) {
     p.classList.add("productDescription")
     return p
 }
+

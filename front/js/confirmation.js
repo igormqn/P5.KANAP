@@ -1,5 +1,6 @@
 const orderId = getOrderId()
-
+displayOrderId(orderId)
+removeAllCache() 
 
 function getOrderId() {
     const queryString = window.location.search
@@ -8,7 +9,12 @@ function getOrderId() {
 }
 
 
-function displayOrderId() {
+function displayOrderId(orderId) {
     const orderIdElement = document.getElementById("orderId")
     orderIdElement.textContent = orderId
+}
+
+function removeAllCache() {
+    const cache = window.localStorage
+    cache.clear()
 }

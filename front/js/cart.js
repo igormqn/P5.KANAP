@@ -99,11 +99,13 @@ function addQuantityToSettings(settings, item) {
   input.min = "1"
   input.max = "100"
   input.value = item.quantity
+  
   input.addEventListener("input", () => updatePriceAndQuantity(item.id, input.value, item))
-
   quantity.appendChild(input)
   settings.appendChild(quantity)
+
 }
+
 
 function updatePriceAndQuantity(id, newValue, item) {
   const itemToUpdate = cart.find((item) => item.id === id)
@@ -240,16 +242,4 @@ function getIdsFromCache() {
     ids.push(id)
   }
   return ids
-}
-function disableNegativeQuantity(){
-if (qte < 1 || qte > 100)
-{ alert("Veuillez saisir une quantité entre 1 et 100"); 
- return false;
-}
-
-colors.forEach(element =>  {
-    console.log(element)});
-}
-function option(Value) {
-    let option = document.createElement("option")
 }

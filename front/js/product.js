@@ -68,8 +68,9 @@ function handleClick() {
    redirectToCart()
 }
 function SaveMyOrder(color, quantity) {
-    const data = {
-        [key]: id,
+    const key = `${id}-${color}`
+        const data = {
+        id: id,
         color: color,
         quantity: Number(quantity),
         price: Priceitem,
@@ -77,7 +78,7 @@ function SaveMyOrder(color, quantity) {
         altTxt: altText,
         name: articleName,
     }
-    localStorage.setItem(id, JSON.stringify(data))
+    localStorage.setItem(key, JSON.stringify(data))
 }
 function isOrderInvalid(color, quantity) {
     if (color == null || color == "" || quantity == null) {
