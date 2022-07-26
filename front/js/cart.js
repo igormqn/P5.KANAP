@@ -99,7 +99,17 @@ function addQuantityToSettings(settings, item) {
   input.min = "1"
   input.max = "100"
   input.value = item.quantity
-  
+
+  input.addEventListener("blur", (e) => {
+    const qte = e.target.value;
+    if (qte < 0 || qte > 100) {
+      alert("La quantité doit être comprise entre 1 et 100");
+      input.value = 1;
+      return;
+    }
+
+  })
+
   input.addEventListener("input", () => updatePriceAndQuantity(item.id, input.value, item))
   quantity.appendChild(input)
   settings.appendChild(quantity)
@@ -117,9 +127,15 @@ function updatePriceAndQuantity(id, newValue, item) {
 }
 
 function deleteDataFromCache(item) {
-  const key = `${item.id}-${item.color}`
-  localStorage.removeItem(key)
+  const key = `${item.id}-${item.color}`;
+  if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
+    localStorage.removeItem(key)
+  }
+  else {
+    return
+  }
 }
+
 
 function saveNewDataToCache(item) {
   const dataToSave = JSON.stringify(item)

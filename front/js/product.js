@@ -91,6 +91,15 @@ function redirectToCart() {
 }
 
 
+input.addEventListener("blur", (e) => {
+    const qte = e.target.value;
+    if (qte < 0 || qte > 100) {
+      alert("La quantité doit être comprise entre 1 et 100");
+      input.value = 1;
+      return;
+    }
+
+  })
 
 
 //if (qte < 1 || qte > 100)
