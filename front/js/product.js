@@ -66,6 +66,9 @@ function handleClick() {
    if (isOrderInvalid(color, quantity)) return
    SaveMyOrder(color, quantity)
    redirectToCart()
+
+   
+
 }
 function SaveMyOrder(color, quantity) {
     const key = `${id}-${color}`
@@ -85,30 +88,19 @@ function isOrderInvalid(color, quantity) {
         alert("Please select a color and quantity")
         return true
     }
+
 }
 function redirectToCart() {
     window.location.href = "cart.html"
 }
 
+let qte = document.querySelector("#quantity");
 
-input.addEventListener("blur", (e) => {
-    const qte = e.target.value;
-    if (qte < 0 || qte > 100) {
-      alert("La quantité doit être comprise entre 1 et 100");
-      input.value = 1;
-      return;
+qte.addEventListener("blur", function () {
+    if (qte.value < 1 || qte.value > 100) {
+        alert("La quantité doit être comprise entre 1 et 100");
+        qte.value = 1;
+        return;
     }
+});
 
-  })
-
-
-//if (qte < 1 || qte > 100)
-//{ alert("Veuillez saisir une quantité entre 1 et 100"); 
- //return false;
-//}
-
-//colors.forEach(element =>  {
- //   console.log(element)});
-//function option(Value) {
-//    let option = document.createElement("option")
-//}
