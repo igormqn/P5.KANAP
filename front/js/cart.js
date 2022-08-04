@@ -1,11 +1,13 @@
+
 const cart = []
 
 retrieveItemsFromCache()
 cart.forEach((item) => displayItem(item))
-
+// function to transfer client data
 const orderButton = document.querySelector("#order")
 orderButton.addEventListener("click", (e) => submitForm(e))
 
+// function to give the possibility to display more item on the localStorage
 function retrieveItemsFromCache() {
   const numberOfItems = localStorage.length
   for (let i = 0; i < numberOfItems; i++) {
@@ -14,10 +16,10 @@ function retrieveItemsFromCache() {
     cart.push(itemObject)
   }
 }
-
+// function used to display the item create variable used in function below
 function displayItem(item) {
   const article = makeArticle(item)
-  const imageDiv = makeImageDiv(item)
+  const imageDiv = makeImage(item)
   article.appendChild(imageDiv)
   const cardItemContent = makeCartContent(item)
   article.appendChild(cardItemContent)
@@ -25,32 +27,32 @@ function displayItem(item) {
   displayTotalQuantity()
   displayTotalPrice()
 }
-
+// function to display the total quantity on the page
 function displayTotalQuantity() {
   const totalQuantity = document.querySelector("#totalQuantity")
   const total = cart.reduce((total, item) => total + item.quantity, 0)
   totalQuantity.textContent = total
 }
-
+// function to display the total quantity on the page
 function displayTotalPrice() {
   const totalPrice = document.querySelector("#totalPrice")
   const total = cart.reduce((total, item) => total + item.price * item.quantity, 0)
   totalPrice.textContent = total
 }
-
+// function to display the product content on the cart page
 function makeCartContent(item) {
   const cardItemContent = document.createElement("div")
   cardItemContent.classList.add("cart__item__content")
 
   const description = makeDescription(item)
-  const settings = makeSettings(item)
+  const settings = buildSettings(item)
 
   cardItemContent.appendChild(description)
   cardItemContent.appendChild(settings)
   return cardItemContent
 }
-
-function makeSettings(item) {
+// function to make the settings of the product
+function buildSettings(item) {
   const settings = document.createElement("div")
   settings.classList.add("cart__item__content__settings")
 
@@ -58,7 +60,7 @@ function makeSettings(item) {
   addDeleteToSettings(settings, item)
   return settings
 }
-
+// function to delete product from the settings
 function addDeleteToSettings(settings, item) {
   const div = document.createElement("div")
   div.classList.add("cart__item__content__settings__delete")
@@ -69,6 +71,7 @@ function addDeleteToSettings(settings, item) {
   div.appendChild(p)
   settings.appendChild(div)
 }
+// function to delete product from the localStorage
 function deleteItem(item) {
   const itemToDelete = cart.findIndex(
     (product) => product.id === item.id && product.color === item.color
@@ -78,14 +81,20 @@ function deleteItem(item) {
   displayTotalQuantity()
   deleteDataFromCache(item)
   deleteArticleFromPage(item)
+
+  if (localStorage.length === 0 ) {
+    alert("Panier vide, retour à l'accueil")
+    window.location = "index.html";
+  }
 }
+// function to delete article from page
 function deleteArticleFromPage(item) {
   const articleToDelete = document.querySelector(
     `article[data-id="${item.id}"][data-color="${item.color}"]`
   )
   articleToDelete.remove()
 }
-
+// function to create the input to choose the quantity between 1 and 100
 function addQuantityToSettings(settings, item) {
   const quantity = document.createElement("div")
   quantity.classList.add("cart__item__content__settings__quantity")
@@ -99,7 +108,7 @@ function addQuantityToSettings(settings, item) {
   input.min = "1"
   input.max = "100"
   input.value = item.quantity
-
+// variable to create an alert if the quantity is null, negative or above 100
   input.addEventListener("blur", (e) => {
     const qte = e.target.value;
     if (qte < 0 || qte > 100) {
@@ -116,7 +125,7 @@ function addQuantityToSettings(settings, item) {
 
 }
 
-
+// function to permit the user to update quantity to display a new price
 function updatePriceAndQuantity(id, newValue, item) {
   const itemToUpdate = cart.find((item) => item.id === id)
   itemToUpdate.quantity = Number(newValue)
@@ -125,7 +134,7 @@ function updatePriceAndQuantity(id, newValue, item) {
   displayTotalPrice()
   saveNewDataToCache(item)
 }
-
+// function to create the alert to delete the item from LocalStorage and create the alert if he is sure
 function deleteDataFromCache(item) {
   const key = `${item.id}-${item.color}`;
   if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
@@ -136,13 +145,13 @@ function deleteDataFromCache(item) {
   }
 }
 
-
+// function to save new data in the localStorage
 function saveNewDataToCache(item) {
   const dataToSave = JSON.stringify(item)
   const key = `${item.id}-${item.color}`
   localStorage.setItem(key, dataToSave)
 }
-
+// function to create the div cart__item__content__description
 function makeDescription(item) {
   const description = document.createElement("div")
   description.classList.add("cart__item__content__description")
@@ -159,7 +168,7 @@ function makeDescription(item) {
   description.appendChild(p2)
   return description
 }
-
+// function to create the article with the id
 function displayArticle(article) {
   document.querySelector("#cart__items").appendChild(article)
 }
@@ -170,7 +179,8 @@ function makeArticle(item) {
   article.dataset.color = item.color
   return article
 }
-function makeImageDiv(item) {
+// function use to create the image
+function makeImage(item) {
   const div = document.createElement("div")
   div.classList.add("cart__item__img")
 
@@ -180,7 +190,7 @@ function makeImageDiv(item) {
   div.appendChild(image)
   return div
 }
-
+// function to tell what to do if the cart is null
 function submitForm(e) {
   e.preventDefault()
   if (cart.length === 0) {
@@ -188,8 +198,8 @@ function submitForm(e) {
     return
   }
 
-  if (isFormInvalid()) return
-  if (isEmailInvalid()) return
+  if (ifFormInvalid()) return
+  if (ifEmailInvalid()) return
 
   const body = makeRequestBody()
   fetch("http://localhost:3000/api/products/order", {
@@ -206,18 +216,18 @@ function submitForm(e) {
     })
     .catch((err) => console.error(err))
 }
-
-function isEmailInvalid() {
+// function to tell what is allowed when we write the e-mail
+function ifEmailInvalid() {
   const email = document.querySelector("#email").value
-  const regex = /^[A-Za-z0-9+_.-]+@(.+)$/
-  if (regex.test(email) === false) {
+  var mailformat = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,7}$/
+  if (mailformat.test(email) === false) {
     alert("Please enter valid email")
     return true
   }
   return false
 }
-
-function isFormInvalid() {
+// function to tell what is allowed when we write the e-mail wrong
+function ifFormInvalid() {
   const form = document.querySelector(".cart__order__form")
   const inputs = form.querySelectorAll("input")
   inputs.forEach((input) => {
@@ -227,8 +237,9 @@ function isFormInvalid() {
     }
     return false
   })
+  
 }
-
+// function to make the form of the formulary
 function makeRequestBody() {
   const form = document.querySelector(".cart__order__form")
   const firstName = form.elements.firstName.value
@@ -248,7 +259,7 @@ function makeRequestBody() {
   }
   return body
 }
-
+// function to get the id from the cache
 function getIdsFromCache() {
   const numberOfProducts = localStorage.length
   const ids = []
